@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -10,7 +8,6 @@ import {
 } from "@/components/ui/sheet";
 
 const Navbar = () => {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const menuItems = [
     { name: "Home", path: "/" },
@@ -43,16 +40,6 @@ const Navbar = () => {
                 </Button>
               </Link>
             ))}
-            
-            {/* Search Icon */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="text-primary-foreground hover:bg-maritime-navy-light hover:text-primary-foreground"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
           </div>
 
           {/* Mobile Menu */}
@@ -82,17 +69,6 @@ const Navbar = () => {
             </SheetContent>
           </Sheet>
         </div>
-
-        {/* Search Bar */}
-        {isSearchOpen && (
-          <div className="pb-4 animate-fade-in">
-            <Input
-              type="text"
-              placeholder="Search..."
-              className="w-full max-w-md mx-auto bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/60"
-            />
-          </div>
-        )}
       </div>
     </nav>
   );

@@ -22,29 +22,10 @@ const Certificates = () => {
     setResult(null);
     setLoading(true);
 
-    const params = new URLSearchParams();
-    if (searchType === "certificate") {
-      params.append('certificate_number', searchValue);
-    } else if (searchType === "name") {
-      params.append('participant_name', searchValue);
-    } else if (searchType === "passport") {
-      params.append('passport_number', searchValue);
-    }
+    // Since this is now a static website, certificate verification is not available
+    setError('Certificate verification is not available in static mode. Please contact the academy directly for verification.');
 
-    try {
-      const response = await fetch(`http://localhost:8000/api/verify?${params}`);
-      if (response.ok) {
-        const data = await response.json();
-        setResult(data);
-      } else {
-        const err = await response.json();
-        setError(err.detail);
-      }
-    } catch (err) {
-      setError('Network error');
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   return (
