@@ -1,13 +1,17 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 
 const Navbar = () => {
+  const [open, setOpen] = useState(false);
 
   const menuItems = [
     { name: "Home", path: "/" },
@@ -43,7 +47,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu */}
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild className="lg:hidden">
               <Button
                 variant="ghost"
@@ -54,9 +58,12 @@ const Navbar = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-primary border-maritime-navy-light">
+              <VisuallyHidden>
+                <SheetTitle>Navigation Menu</SheetTitle>
+              </VisuallyHidden>
               <div className="flex flex-col space-y-4 mt-8">
                 {menuItems.map((item) => (
-                  <Link key={item.path} to={item.path}>
+                  <Link key={item.path} to={item.path} onClick={() => setOpen(false)}>
                     <Button
                       variant="ghost"
                       className="w-full justify-start text-primary-foreground hover:bg-maritime-navy-light hover:text-primary-foreground"

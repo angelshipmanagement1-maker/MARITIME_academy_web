@@ -2,15 +2,114 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const EcdisCourses = () => {
   const ecdisCourses = [
-    
     {
-      title: "TYPE SPECIFIC ECDIS",
-      description: "Type-specific ECDIS training focuses on particular ECDIS system models and their unique features. This course provides in-depth knowledge of specific ECDIS equipment and manufacturer-specific functionalities.",
+      title: "ECDIS (STCW A-II/1 IMO/MC 1.27)",
+      description: "",
       image: "/placeholder.svg"
     },
     {
-      title: "FURUNO TYPE-SPECIFIC ECDIS",
-      description: "Specialized training for Furuno ECDIS systems, covering the specific features, operation, and maintenance of Furuno navigation equipment. This course ensures proficiency in Furuno's ECDIS technology.",
+      title: "JRC JAN-701/701B/901/901B/901M/2000",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Sperry Marine",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "TRANSAS NAVIGATOR SAILOR 4000 ECDIS",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Chatworld",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Sam Electronics",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Martek",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Consillium",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Imteck",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Kelvin Hughes",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Simrad",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Maris",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "OPERATIONAL USE OF ECDIS",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "RADAR OBSERVER SIMULATOR & ARPA",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "TOTEM PLUS TYPE SPECIFIC ECDIS TRAINING",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "WARTSILA SAM ECDIS PILOT PLATINUM",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Voyage Planning using ECDIS",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "DGT (TRANSPORT OF DANGEROUS GOODS - HAZMAT)",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Radar Navigation, Plotting and ARPA",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "RADAR OBSERVER SIMULATOR & ARPA",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Automatic Radar Plotting Aids",
+      description: "",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Radar Observer Simulator",
+      description: "",
       image: "/placeholder.svg"
     }
   ];
