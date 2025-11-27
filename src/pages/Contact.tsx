@@ -90,7 +90,7 @@ const Contact = () => {
             <CardContent className="p-0">
               <div className="h-96 rounded-b-lg overflow-hidden">
                 <iframe
-                  src={`https://maps.google.com/maps?q=${import.meta.env.VITE_ACADEMY_LAT},${import.meta.env.VITE_ACADEMY_LNG}&z=17&output=embed`}
+                  src={`https://maps.google.com/maps?q=19.01444909250755,73.04052405820048&z=17&output=embed`}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
