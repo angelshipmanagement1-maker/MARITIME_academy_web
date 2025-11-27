@@ -2,114 +2,109 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const EcdisCourses = () => {
   const ecdisCourses = [
-    {
+        {
       title: "ECDIS (STCW A-II/1 IMO/MC 1.27)",
-      description: "",
+      description: "Training on Electronic Chart Display and Information System (ECDIS) for safe navigation, including chart usage, route planning, and compliance with STCW and IMO regulations.",
       image: "/placeholder.svg"
     },
     {
       title: "JRC JAN-701/701B/901/901B/901M/2000",
-      description: "",
+      description: "Type-specific ECDIS training for JRC models, focusing on operation, route planning, and practical navigation exercises onboard or in simulators.",
       image: "/placeholder.svg"
     },
     {
       title: "Sperry Marine",
-      description: "",
+      description: "Operational training on Sperry Marine ECDIS systems, covering navigation, route planning, chart management, and safety compliance.",
       image: "/placeholder.svg"
     },
     {
       title: "TRANSAS NAVIGATOR SAILOR 4000 ECDIS",
-      description: "",
+      description: "Hands-on training for Transas Navigator Sailor 4000 ECDIS, including chart plotting, route monitoring, and operational procedures for safe navigation.",
       image: "/placeholder.svg"
     },
     {
       title: "Chatworld",
-      description: "",
+      description: "Type-specific ECDIS training for Chatworld systems, covering operational functions, voyage planning, and compliance with maritime navigation standards.",
       image: "/placeholder.svg"
     },
     {
       title: "Sam Electronics",
-      description: "",
+      description: "Training on Sam Electronics ECDIS models with emphasis on practical operation, route planning, and safe navigation practices.",
       image: "/placeholder.svg"
     },
     {
       title: "Martek",
-      description: "",
+      description: "Hands-on ECDIS training for Martek systems, including chart usage, route monitoring, and safety compliance in line with IMO regulations.",
       image: "/placeholder.svg"
     },
     {
       title: "Consillium",
-      description: "",
+      description: "Operational ECDIS training for Consillium systems focusing on practical navigation, chart management, and voyage planning.",
       image: "/placeholder.svg"
     },
     {
       title: "Imteck",
-      description: "",
+      description: "Type-specific ECDIS training for Imteck systems, emphasizing navigation safety, route planning, and proper chart management.",
       image: "/placeholder.svg"
     },
     {
       title: "Kelvin Hughes",
-      description: "",
+      description: "ECDIS operational training for Kelvin Hughes systems, covering practical usage, route planning, and compliance with maritime safety standards.",
       image: "/placeholder.svg"
     },
     {
       title: "Simrad",
-      description: "",
+      description: "Hands-on training for Simrad ECDIS systems, focusing on chart operation, navigation planning, and safe voyage execution.",
       image: "/placeholder.svg"
     },
     {
       title: "Maris",
-      description: "",
+      description: "ECDIS training for Maris systems, including chart usage, route planning, and monitoring to ensure safe navigation practices.",
       image: "/placeholder.svg"
     },
     {
       title: "OPERATIONAL USE OF ECDIS",
-      description: "",
+      description: "Training on practical operational procedures for ECDIS, including route planning, chart management, alarms, and compliance with IMO navigation regulations.",
       image: "/placeholder.svg"
     },
     {
       title: "RADAR OBSERVER SIMULATOR & ARPA",
-      description: "",
+      description: "Simulator-based training on radar operation and Automatic Radar Plotting Aids (ARPA), covering target tracking, collision avoidance, and maritime safety procedures.",
       image: "/placeholder.svg"
     },
     {
       title: "TOTEM PLUS TYPE SPECIFIC ECDIS TRAINING",
-      description: "",
+      description: "Type-specific training for TOTEM PLUS ECDIS systems, including navigation, route planning, and operational safety exercises.",
       image: "/placeholder.svg"
     },
     {
       title: "WARTSILA SAM ECDIS PILOT PLATINUM",
-      description: "",
+      description: "Hands-on training for Wartsila SAM ECDIS Pilot Platinum systems, focusing on practical navigation, route planning, and chart monitoring.",
       image: "/placeholder.svg"
     },
     {
       title: "Voyage Planning using ECDIS",
-      description: "",
+      description: "Training on creating safe and efficient voyage plans using ECDIS, including route selection, risk assessment, and compliance with international navigation regulations.",
       image: "/placeholder.svg"
     },
     {
       title: "DGT (TRANSPORT OF DANGEROUS GOODS - HAZMAT)",
-      description: "",
+      description: "Course on handling, transporting, and documenting dangerous goods and hazardous materials in compliance with international maritime regulations.",
       image: "/placeholder.svg"
     },
     {
       title: "Radar Navigation, Plotting and ARPA",
-      description: "",
-      image: "/placeholder.svg"
-    },
-    {
-      title: "RADAR OBSERVER SIMULATOR & ARPA",
-      description: "",
+      description: "Comprehensive training in radar navigation, manual plotting, and ARPA use for collision avoidance and safe maritime operations.",
       image: "/placeholder.svg"
     },
     {
       title: "Automatic Radar Plotting Aids",
-      description: "",
+      description: "Training on ARPA systems to track targets, predict movements, and enhance situational awareness for safe navigation.",
       image: "/placeholder.svg"
     },
     {
       title: "Radar Observer Simulator",
-      description: "",
+      description: "Simulator-based training for radar observers covering target detection, tracking, collision avoidance, and navigation safety procedures.",
       image: "/placeholder.svg"
     }
   ];

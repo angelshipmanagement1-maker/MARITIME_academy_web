@@ -61,6 +61,71 @@ const MaritimeCateringCourses = () => {
       title: "Laundryman Training Program",
       description: "The course curriculum spans a comprehensive array of topics essential for effective ship service activities. Over a duration of six days, participants will engage with subjects such as the administration of ship service activities, the organization and management of laundry operations, understanding fibers and fabrics, techniques for extracting and drying, flatwork ironing, pressing, and finishing.",
       image: "/placeholder.svg"
+    },
+    {
+      title: "Bakery",
+      description: "Training focused on baking techniques, including breads, pastries, cakes, and desserts. Covers hygiene, ingredient handling, and kitchen safety. Practical sessions emphasize quality and presentation.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "CERTIFICATE COURSE IN HOUSEKEEPING MANAGEMENT",
+      description: "A formal program teaching professional housekeeping skills for hospitality and shipboard settings. Includes cleaning procedures, inventory management, team supervision, and maintaining hygiene standards.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "CERTIFICATE OF PROFICIENCY IN SHIPS COOK",
+      description: "An official certification for ship cooks, demonstrating the ability to manage galley operations, prepare meals, maintain hygiene standards, and follow safety regulations aboard vessels.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "CULINARY",
+      description: "Practical and theoretical training in cooking, food preparation, menu planning, and kitchen management. Covers hygiene, nutrition, and modern culinary techniques for professional kitchens.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "FOOD HANDLING - HYGIENE & SAFETY",
+      description: "Training on safe food handling practices, personal hygiene, preventing contamination, and complying with food safety regulations. Emphasizes both theory and practical application.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Food Handling and Food Hygiene",
+      description: "Covers proper food storage, handling, preparation, and hygiene practices to ensure safe consumption and prevent foodborne illnesses. Practical examples are included.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "HACCP - Level 3",
+      description: "Advanced training in Hazard Analysis and Critical Control Points (HACCP), focusing on identifying food hazards, controlling risks, and ensuring food safety compliance at a management level.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "HACCP Training Program",
+      description: "Comprehensive program on implementing HACCP principles in food operations. Teaches hazard analysis, monitoring critical control points, and maintaining food safety standards.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Housekeeping (Include practical with food and accommodation)",
+      description: "Practical training in cleaning and maintaining both accommodation and food service areas. Includes proper sanitation, use of cleaning equipment, and maintaining hygienic standards in shipboard or hospitality environments.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "MESSMAN & GALLEY STAFF TRAINING PROGRAM",
+      description: "Training for messmen and galley staff covering food service, cleaning, inventory management, and hygiene practices. Emphasizes teamwork and efficient kitchen operations.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "ORIENTATION COURSE FOR CATERING PERSONNEL (OCCP)",
+      description: "Introductory course for new catering staff on shipboard food operations. Covers basic cooking, hygiene, safety, and familiarization with galley equipment and procedures.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "Ship’s Cook",
+      description: "Practical and theoretical training for ship cooks, covering meal planning, preparation, food storage, hygiene, and compliance with maritime food safety standards.",
+      image: "/placeholder.svg"
+    },
+    {
+      title: "SHIPBOARD CATERING MANAGEMENT COURSE",
+      description: "Advanced course for managing shipboard catering operations, including menu planning, galley management, budgeting, food procurement, hygiene, and staff supervision.",
+      image: "/placeholder.svg"
     }
   ];
 
