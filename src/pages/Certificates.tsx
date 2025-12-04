@@ -22,10 +22,37 @@ const Certificates = () => {
     setResult(null);
     setLoading(true);
 
-    // Since this is now a static website, certificate verification is not available
-    setError('Certificate verification is not available in static mode. Please contact the academy directly for verification.');
+    try {
+      const params = new URLSearchParams();
+      if (searchType === 'passport') {
+        params.append('passport', searchValue.trim());
+      } else if (searchType === 'certificate') {
+        params.append('certificate_number', searchValue.trim());
+      }
 
-    setLoading(false);
+      const apiUrl = process.env.NODE_ENV === 'production'
+        ? '/api/verify'
+        : 'http://localhost:3000/api/verify';
+
+      const response = await fetch(`${apiUrl}?${params}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setResult(data.data);
+      } else {
+        setError(data.message || 'Verification failed');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,7 +78,6 @@ const Certificates = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="certificate">Certificate Number</SelectItem>
-                    <SelectItem value="name">Participant Name</SelectItem>
                     <SelectItem value="passport">Passport Number</SelectItem>
                   </SelectContent>
                 </Select>
@@ -90,26 +116,42 @@ const Certificates = () => {
             <CardContent className="pt-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Name</p>
-                  <p className="font-semibold text-foreground">{result.name}</p>
+                  <p className="text-sm text-muted-foreground">First Name</p>
+                  <p className="font-semibold text-foreground">{result.firstname}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Course</p>
-                  <p className="font-semibold text-foreground">{result.course}</p>
+                  <p className="text-sm text-muted-foreground">Last Name</p>
+                  <p className="font-semibold text-foreground">{result.lastname}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Certificate ID</p>
-                  <p className="font-semibold text-foreground">{result.certificate_id}</p>
+                  <p className="text-sm text-muted-foreground">Passport</p>
+                  <p className="font-semibold text-foreground">{result.passport}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Certificate Name</p>
+                  <p className="font-semibold text-foreground">{result.certificate_name}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Certificate Number</p>
+                  <p className="font-semibold text-foreground">{result.certificate_number}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Start Date</p>
+                  <p className="font-semibold text-foreground">{result.start_date}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">End Date</p>
+                  <p className="font-semibold text-foreground">{result.end_date}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Issue Date</p>
                   <p className="font-semibold text-foreground">{result.issue_date}</p>
                 </div>
               </div>
-              {result.image_url && (
+              {result.certificate_image_base64 && (
                 <div className="flex justify-center pt-4">
                   <img
-                    src={result.image_url}
+                    src={`data:image/png;base64,${result.certificate_image_base64}`}
                     alt="Certificate"
                     className="max-w-full max-h-96 object-contain"
                   />

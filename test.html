@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Test Certificate Verification API</h1>
+    <form id="testForm">
+        <label for="passport">Passport:</label>
+        <input type="text" id="passport" name="passport"><br><br>
+        <label for="certificate_number">Certificate Number:</label>
+        <input type="text" id="certificate_number" name="certificate_number"><br><br>
+        <button type="submit">Test API</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const passport = document.getElementById('passport').value;
+            const certificate_number = document.getElementById('certificate_number').value;
+
+            let url = 'http://localhost:3000/api/verify?';
+            if (passport) url += `passport=${encodeURIComponent(passport)}&`;
+            if (certificate_number) url += `certificate_number=${encodeURIComponent(certificate_number)}&`;
+            url = url.slice(0, -1); // remove trailing &
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
