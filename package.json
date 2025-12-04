@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "dependencies": {
     "pg": "^8.11.3",
