@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CertificateCard from "@/components/CertificateCard";
 
 const Certificates = () => {
   const [searchType, setSearchType] = useState("certificate");
@@ -18,35 +19,42 @@ const Certificates = () => {
       setError("Please enter a search value");
       return;
     }
+
+    // Validate certificate number length
+    if (searchType === 'certificate') {
+      const trimmedValue = searchValue.trim();
+      if (!/^\d{15}$/.test(trimmedValue)) {
+        setError("Certificate number must be exactly 15 digits");
+        return;
+      }
+    }
+
     setError('');
     setResult(null);
     setLoading(true);
 
     try {
-      const params = new URLSearchParams();
+      const body: any = {};
       if (searchType === 'passport') {
-        params.append('passport', searchValue.trim());
+        body.passport = searchValue.trim();
       } else if (searchType === 'certificate') {
-        params.append('certificate_number', searchValue.trim());
+        body.certificate_number = searchValue.trim();
       }
 
-      const apiUrl = process.env.NODE_ENV === 'production'
-        ? '/api/verify'
-        : 'http://localhost:3000/api/verify';
-
-      const response = await fetch(`${apiUrl}?${params}`, {
-        method: 'GET',
+      const response = await fetch('/api/verify', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.status === 'VALID') {
         setResult(data.data);
       } else {
-        setError(data.message || 'Verification failed');
+        setError('No record found');
       }
     } catch (err) {
       setError('Network error. Please try again.');
@@ -57,11 +65,12 @@ const Certificates = () => {
 
   return (
     <div className="min-h-screen py-16 px-4 bg-background">
-      <div className="container mx-auto max-w-md">
+      {/* Form Section - Narrow and Centered */}
+      <div className="container mx-auto max-w-md mb-12">
         <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 text-center">
           Certificate Verification
         </h1>
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
             <CardTitle className="text-2xl text-center">Verify Certificate</CardTitle>
           </CardHeader>
@@ -86,7 +95,7 @@ const Certificates = () => {
                 <Input
                   type="text"
                   placeholder={
-                    searchType === "certificate" ? "Enter Certificate Number" :
+                    searchType === "certificate" ? "Enter Certificate Number (must be 15 digits)" :
                     searchType === "name" ? "Enter Participant Name" :
                     "Enter Passport Number"
                   }
@@ -107,65 +116,16 @@ const Certificates = () => {
             {error && <p className="text-red-500 mt-4">{error}</p>}
           </CardContent>
         </Card>
-
-        {result && (
-          <Card className="border-maritime-gold animate-fade-in">
-            <CardHeader className="bg-maritime-gold/10">
-              <CardTitle className="text-xl text-primary">Certificate Details</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">First Name</p>
-                  <p className="font-semibold text-foreground">{result.firstname}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Last Name</p>
-                  <p className="font-semibold text-foreground">{result.lastname}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Passport</p>
-                  <p className="font-semibold text-foreground">{result.passport}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Certificate Name</p>
-                  <p className="font-semibold text-foreground">{result.certificate_name}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Certificate Number</p>
-                  <p className="font-semibold text-foreground">{result.certificate_number}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Start Date</p>
-                  <p className="font-semibold text-foreground">{result.start_date}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">End Date</p>
-                  <p className="font-semibold text-foreground">{result.end_date}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Issue Date</p>
-                  <p className="font-semibold text-foreground">{result.issue_date}</p>
-                </div>
-              </div>
-              {result.certificate_image_base64 && (
-                <div className="flex justify-center pt-4">
-                  <img
-                    src={`data:image/png;base64,${result.certificate_image_base64}`}
-                    alt="Certificate"
-                    className="max-w-full max-h-96 object-contain"
-                  />
-                </div>
-              )}
-              <div className="pt-4 border-t">
-                <p className="text-sm text-muted-foreground text-center">
-                  This certificate is issued by Angel Maritime Academy Pvt. Ltd. and is valid.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
+
+      {/* Result Section - Full Width */}
+      {result && (
+        <div className="w-full max-w-none">
+          <div className="max-w-7xl w-full mx-auto px-4 animate-fade-in">
+            <CertificateCard data={result} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
