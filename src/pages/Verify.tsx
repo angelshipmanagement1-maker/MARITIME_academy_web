@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
@@ -31,18 +29,12 @@ interface ApiResponse {
 }
 
 const Verify = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [certificateNumber, setCertificateNumber] = useState('');
+  const [searchParams] = useSearchParams();
   const [data, setData] = useState<CertificateData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fetchCertificate = useCallback(async (certNum: string) => {
-    if (!certNum.trim()) {
-      setError('Please enter a certificate number');
-      return;
-    }
-
     setLoading(true);
     setError(null);
     setData(null);
@@ -53,7 +45,6 @@ const Verify = () => {
 
       if (response.status === 200 && result.status === 'VALID') {
         setData(result.data!);
-        setSearchParams({ certificate_number: certNum });
       } else if (response.status === 404 || result.status === 'INVALID') {
         setError('Certificate not found or invalid');
       } else if (response.status === 400) {
@@ -68,55 +59,36 @@ const Verify = () => {
     } finally {
       setLoading(false);
     }
-  }, [setSearchParams]);
+  }, []);
 
   useEffect(() => {
     const certNum = searchParams.get('certificate_number');
     if (certNum) {
-      setCertificateNumber(certNum);
       fetchCertificate(certNum);
     }
   }, [searchParams, fetchCertificate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchCertificate(certificateNumber);
-  };
+  const certNum = searchParams.get('certificate_number');
+
+  if (!certNum) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <h1 className="text-3xl font-bold mb-4">Certificate Verification</h1>
+        <p className="text-lg text-muted-foreground">Scan a QR code to verify a certificate.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8">Certificate Verification</h1>
 
-      <Card className="max-w-2xl mx-auto mb-8">
-        <CardHeader>
-          <CardTitle>Enter Certificate Number</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="certificate-number">Certificate Number</Label>
-              <Input
-                id="certificate-number"
-                type="text"
-                value={certificateNumber}
-                onChange={(e) => setCertificateNumber(e.target.value)}
-                placeholder="Enter certificate number"
-                required
-              />
-            </div>
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Verifying...
-                </>
-              ) : (
-                'Verify Certificate'
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+      {loading && (
+        <div className="flex justify-center items-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Verifying certificate...</span>
+        </div>
+      )}
 
       {error && (
         <Alert className="max-w-2xl mx-auto mb-8">
@@ -173,17 +145,14 @@ const Verify = () => {
                 <p className="text-lg">{data.expiry_date}</p>
               </div>
             </div>
-            <div>
-              <Label className="font-semibold">Certificate Image</Label>
-              {data.certificate_image ? (
+            {data.certificate_image && (
+              <div>
+                <Label className="font-semibold">Certificate Image</Label>
                 <div className="mt-2">
                   <img src={data.certificate_image} alt="Certificate" className="max-w-full h-auto rounded" />
-                  <Button className="mt-2">View Full Certificate</Button>
                 </div>
-              ) : (
-                <p className="text-lg text-muted-foreground">{data.image_message}</p>
-              )}
-            </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
