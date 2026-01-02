@@ -101,7 +101,7 @@ const Verify = () => {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               Certificate Details
-              <Badge variant={data.validity_status === 'Certificate is valid' ? 'default' : 'destructive'}>
+              <Badge className={data.validity_status === 'Certificate is valid' ? 'bg-green-500 text-white' : ''} variant={data.validity_status === 'Certificate is valid' ? 'default' : 'destructive'}>
                 {data.validity_status}
               </Badge>
             </CardTitle>
