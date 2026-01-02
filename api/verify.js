@@ -8,22 +8,17 @@ const RATE_LIMIT = 20;
 const RATE_WINDOW = 60 * 1000; // 1 minute
 
 export default async (req, res) => {
-  // CORS check
-  const origin = req.headers.origin;
-  const isAllowed = !origin || origin === ALLOWED_ORIGIN || origin.startsWith('http://localhost:');
-  if (origin && !isAllowed) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
+  // CORS check - allow all for public access
 
-  res.setHeader('Access-Control-Allow-Origin', origin || ALLOWED_ORIGIN);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET' && req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -42,15 +37,20 @@ export default async (req, res) => {
     return res.status(429).json({ error: 'Too many requests' });
   }
 
-  // Parse JSON body
-  const { passport, certificate_number } = req.body || {};
-  if (!passport && !certificate_number) {
-    return res.status(400).json({ status: 'INVALID', message: 'At least one of passport or certificate_number must be provided' });
+  // Parse certificate_number
+  let certificate_number;
+  if (req.method === 'GET') {
+    certificate_number = req.query.certificate_number;
+  } else {
+    certificate_number = req.body?.certificate_number;
+  }
+  if (!certificate_number) {
+    return res.status(400).json({ error: 'Certificate number is required' });
   }
 
   // Logging
   const timestamp = new Date().toISOString();
-  const sanitizedParams = { passport: passport || null, certificate_number: certificate_number || null };
+  const sanitizedParams = { certificate_number };
   let resultCount = 0;
 
   // Database connection
@@ -73,18 +73,15 @@ export default async (req, res) => {
         cs.expiry_date
       FROM certificate_selections cs
       JOIN candidates c ON cs.candidate_id = c.id
-      WHERE
-        ($1::text IS NOT NULL AND c.json_data->>'passport' = $1)
-        OR
-        ($2::text IS NOT NULL AND cs.certificate_number = $2)
+      WHERE cs.certificate_number = $1
       LIMIT 1;
     `;
-    const values = [passport || null, certificate_number || null];
+    const values = [certificate_number];
     const result = await client.query(query, values);
     resultCount = result.rows.length;
 
     if (resultCount === 0) {
-      return res.status(200).json({ status: 'INVALID' });
+      return res.status(404).json({ status: 'INVALID' });
     }
 
     const row = result.rows[0];

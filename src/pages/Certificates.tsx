@@ -3,11 +3,9 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CertificateCard from "@/components/CertificateCard";
 
 const Certificates = () => {
-  const [searchType, setSearchType] = useState("certificate");
   const [searchValue, setSearchValue] = useState("");
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
@@ -21,12 +19,10 @@ const Certificates = () => {
     }
 
     // Validate certificate number length
-    if (searchType === 'certificate') {
-      const trimmedValue = searchValue.trim();
-      if (!/^\d{15}$/.test(trimmedValue)) {
-        setError("Certificate number must be exactly 15 digits");
-        return;
-      }
+    const trimmedValue = searchValue.trim();
+    if (!/^\d{15}$/.test(trimmedValue)) {
+      setError("Certificate number must be exactly 15 digits");
+      return;
     }
 
     setError('');
@@ -34,12 +30,9 @@ const Certificates = () => {
     setLoading(true);
 
     try {
-      const body: any = {};
-      if (searchType === 'passport') {
-        body.passport = searchValue.trim();
-      } else if (searchType === 'certificate') {
-        body.certificate_number = searchValue.trim();
-      }
+      const body = {
+        certificate_number: searchValue.trim(),
+      };
 
       const response = await fetch('/api/verify', {
         method: 'POST',
@@ -76,33 +69,19 @@ const Certificates = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground text-center">
-              Enter certificate details to verify
+              Enter certificate number to verify
             </p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Verify By</label>
-                <Select value={searchType} onValueChange={setSearchType}>
-                  <SelectTrigger className="w-full mt-1">
-                    <SelectValue placeholder="Select verification type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="certificate">Certificate Number</SelectItem>
-                    <SelectItem value="passport">Passport Number</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
+                <label className="text-sm font-medium text-muted-foreground">Certificate Number</label>
                 <Input
                   type="text"
-                  placeholder={
-                    searchType === "certificate" ? "Enter Certificate Number (must be 15 digits)" :
-                    searchType === "name" ? "Enter Participant Name" :
-                    "Enter Passport Number"
-                  }
+                  placeholder="Enter Certificate Number"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  className="w-full"
+                  className="w-full mt-1"
                 />
+                <p className="text-xs text-muted-foreground mt-1">Must be exactly 15 digits</p>
               </div>
               <Button
                 type="submit"
