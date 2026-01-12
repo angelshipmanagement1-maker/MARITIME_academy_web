@@ -29,7 +29,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ data }) => {
 
   const getValidityColor = (status: string) => {
     if (status === 'Certificate is valid') return 'text-green-600';
-    if (status === 'Certificate is invalid') return 'text-red-600';
+    if (status === 'Certificate is expired') return 'text-red-600';
     return 'text-yellow-600';
   };
 
