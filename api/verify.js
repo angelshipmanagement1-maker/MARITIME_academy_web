@@ -97,7 +97,7 @@ export default async (req, res) => {
     if (!expiryDate) {
       row.validity_status = 'Expiry date not available';
     } else {
-      row.validity_status = currentDate <= expiryDate ? 'Certificate is valid' : 'Certificate is invalid';
+      row.validity_status = currentDate <= expiryDate ? 'Certificate is valid' : 'Certificate is expired';
     }
 
     // Add image fields as per requirements
