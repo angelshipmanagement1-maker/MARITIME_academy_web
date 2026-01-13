@@ -3,6 +3,7 @@ import React from 'react';
 interface CertificateData {
   firstname: string;
   lastname: string;
+  passport: string;
   certificate_name: string;
   certificate_number: string;
   start_date: string;
@@ -43,7 +44,7 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ data }) => {
         {/* Candidate Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-primary border-b pb-2">Candidate Information</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">First Name</p>
               <p className="font-semibold text-foreground">{data.firstname}</p>
@@ -51,6 +52,10 @@ const CertificateCard: React.FC<CertificateCardProps> = ({ data }) => {
             <div>
               <p className="text-sm text-muted-foreground">Last Name</p>
               <p className="font-semibold text-foreground">{data.lastname}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Passport Number</p>
+              <p className="font-semibold text-foreground">{data.passport}</p>
             </div>
           </div>
         </div>
