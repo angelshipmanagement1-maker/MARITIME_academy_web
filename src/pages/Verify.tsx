@@ -7,8 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
 
 interface CertificateData {
-  firstname: string;
-  lastname: string;
+  candidate_name: string;
   passport: string;
   certificate_name: string;
   certificate_number: string;
@@ -109,12 +108,8 @@ const Verify = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label className="font-semibold">First Name</Label>
-                <p className="text-lg">{data.firstname}</p>
-              </div>
-              <div>
-                <Label className="font-semibold">Last Name</Label>
-                <p className="text-lg">{data.lastname}</p>
+                <Label className="font-semibold">Name</Label>
+                <p className="text-lg">{data.candidate_name}</p>
               </div>
               <div>
                 <Label className="font-semibold">Passport Number</Label>

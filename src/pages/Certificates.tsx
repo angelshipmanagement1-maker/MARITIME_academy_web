@@ -20,8 +20,8 @@ const Certificates = () => {
 
     // Validate certificate number length
     const trimmedValue = searchValue.trim();
-    if (!/^\d{15}$/.test(trimmedValue)) {
-      setError("Certificate number must be exactly 15 digits");
+    if (!/^\d{14,16}$/.test(trimmedValue)) {
+      setError("Certificate number must be 14 to 16 digits");
       return;
     }
 
@@ -81,7 +81,7 @@ const Certificates = () => {
                   onChange={(e) => setSearchValue(e.target.value)}
                   className="w-full mt-1"
                 />
-                <p className="text-xs text-muted-foreground mt-1">Must be exactly 15 digits</p>
+                <p className="text-xs text-muted-foreground mt-1">Must be 14 to 16 digits</p>
               </div>
               <Button
                 type="submit"

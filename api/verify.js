@@ -47,11 +47,15 @@ export default async (req, res) => {
   if (!certificate_number) {
     return res.status(400).json({ error: 'Certificate number is required' });
   }
+  if (certificate_number.length < 14 || certificate_number.length > 16) {
+    return res.status(400).json({ error: 'Certificate number must be 14 to 16 digits' });
+  }
 
   // Logging
   const timestamp = new Date().toISOString();
   const sanitizedParams = { certificate_number };
   let resultCount = 0;
+  let source = 'primary';
 
   // Database connection
   const client = new Client({
@@ -60,25 +64,75 @@ export default async (req, res) => {
 
   try {
     await client.connect();
-    const query = `
-      SELECT
-        c.json_data->>'firstName' as firstname,
-        c.json_data->>'lastName' as lastname,
-        c.json_data->>'passport' as passport,
-        cs.certificate_name,
-        cs.certificate_number,
-        cs.start_date,
-        cs.end_date,
-        cs.issue_date,
-        cs.expiry_date
-      FROM certificate_selections cs
-      JOIN candidates c ON cs.candidate_id = c.id
-      WHERE cs.certificate_number = $1
-      LIMIT 1;
-    `;
-    const values = [certificate_number];
-    const result = await client.query(query, values);
-    resultCount = result.rows.length;
+    let result;
+    let values = [certificate_number];
+
+    if (certificate_number.length === 15) {
+      // Case A: 15 digits - Search primary first, then legacy
+      let query = `
+        SELECT
+          c.json_data->>'firstName' || ' ' || c.json_data->>'lastName' as candidate_name,
+          c.json_data->>'passport' as passport,
+          cs.certificate_name,
+          cs.certificate_number,
+          cs.start_date,
+          cs.end_date,
+          cs.issue_date,
+          cs.expiry_date
+        FROM certificate_selections cs
+        JOIN candidates c ON cs.candidate_id = c.id
+        WHERE cs.certificate_number = $1
+        LIMIT 1;
+      `;
+      result = await client.query(query, values);
+      resultCount = result.rows.length;
+
+      if (resultCount === 0) {
+        // Fallback to legacy
+        query = `
+          SELECT
+            candidate_name,
+            passport,
+            certificate_name,
+            certificate_number,
+            start_date,
+            end_date,
+            issue_date,
+            expiry_date
+          FROM legacy_certificates
+          WHERE certificate_number = $1
+          LIMIT 1;
+        `;
+        result = await client.query(query, values);
+        resultCount = result.rows.length;
+        if (resultCount > 0) {
+          source = 'legacy';
+        }
+      } else {
+        source = 'primary';
+      }
+    } else {
+      // Case B: 14 or 16 digits - Search legacy only
+      const query = `
+        SELECT
+          candidate_name,
+          passport,
+          certificate_name,
+          certificate_number,
+          start_date,
+          end_date,
+          issue_date,
+          expiry_date
+        FROM legacy_certificates
+        WHERE certificate_number = $1
+        LIMIT 1;
+      `;
+      result = await client.query(query, values);
+      resultCount = result.rows.length;
+      if (resultCount > 0) {
+        source = 'legacy';
+      }
+    }
 
     if (resultCount === 0) {
       return res.status(404).json({ status: 'INVALID' });
@@ -103,6 +157,9 @@ export default async (req, res) => {
     // Add image fields as per requirements
     row.certificate_image = null;
     row.image_message = 'Image not available at the moment';
+
+    // Log source
+    console.log(`Certificate ${certificate_number} found in ${source}`);
 
     return res.status(200).json({ status: 'VALID', data: row });
   } catch (error) {
