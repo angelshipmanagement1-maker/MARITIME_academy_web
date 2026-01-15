@@ -64,6 +64,13 @@ export default async (req, res) => {
 
   try {
     await client.connect();
+    // Alter json_data column to JSONB if not already
+    try {
+      await client.query(`ALTER TABLE candidates ALTER COLUMN json_data TYPE jsonb USING json_data::jsonb;`);
+    } catch (alterError) {
+      // Ignore if already altered or other issues
+      console.log('Alter table skipped:', alterError.message);
+    }
     let result;
     let values = [certificate_number];
 
@@ -71,8 +78,8 @@ export default async (req, res) => {
       // Case A: 15 digits - Search primary first, then legacy
       let query = `
         SELECT
-          (c.json_data::jsonb)->>'firstName' || ' ' || (c.json_data::jsonb)->>'lastName' as candidate_name,
-          (c.json_data::jsonb)->>'passport' as passport,
+          c.json_data->>'firstName' || ' ' || c.json_data->>'lastName' as candidate_name,
+          c.json_data->>'passport' as passport,
           cs.certificate_name,
           cs.certificate_number,
           cs.start_date,
