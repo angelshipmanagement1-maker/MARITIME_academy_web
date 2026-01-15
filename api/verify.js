@@ -71,8 +71,8 @@ export default async (req, res) => {
       // Case A: 15 digits - Search primary first, then legacy
       let query = `
         SELECT
-          (c.json_data::json)->>'firstName' || ' ' || (c.json_data::json)->>'lastName' as candidate_name,
-          (c.json_data::json)->>'passport' as passport,
+          c.json_data->>'firstName' || ' ' || c.json_data->>'lastName' as candidate_name,
+          c.json_data->>'passport' as passport,
           cs.certificate_name,
           cs.certificate_number,
           cs.start_date,
