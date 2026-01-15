@@ -67,53 +67,30 @@ export default async (req, res) => {
     let result;
     let values = [certificate_number];
 
-    if (certificate_number.length === 15) {
-      // Case A: 15 digits - Search primary first, then legacy
-      let query = `
-        SELECT
-          (c.json_data::jsonb)->>'firstName' || ' ' || (c.json_data::jsonb)->>'lastName' as candidate_name,
-          (c.json_data::jsonb)->>'passport' as passport,
-          cs.certificate_name,
-          cs.certificate_number,
-          cs.start_date,
-          cs.end_date,
-          cs.issue_date,
-          cs.expiry_date
-        FROM certificate_selections cs
-        JOIN candidates c ON cs.candidate_id = c.id
-        WHERE cs.certificate_number = $1
-        LIMIT 1;
-      `;
-      result = await client.query(query, values);
-      resultCount = result.rows.length;
+    // Primary query - try for all certificate numbers
+    const primaryQuery = `
+      SELECT
+        COALESCE((c.json_data::jsonb)->>'firstName','') || ' ' || COALESCE((c.json_data::jsonb)->>'lastName','') AS candidate_name,
+        COALESCE((c.json_data::jsonb)->>'passport','') AS passport,
+        cs.certificate_name,
+        cs.certificate_number,
+        cs.start_date,
+        cs.end_date,
+        cs.issue_date,
+        cs.expiry_date
+      FROM certificate_selections cs
+      JOIN candidates c ON cs.candidate_id = c.id
+      WHERE cs.certificate_number = $1
+        AND c.json_data IS NOT NULL
+        AND jsonb_typeof(c.json_data::jsonb) = 'object'
+      LIMIT 1;
+    `;
+    result = await client.query(primaryQuery, values);
+    resultCount = result.rows.length;
 
-      if (resultCount === 0) {
-        // Fallback to legacy
-        query = `
-          SELECT
-            candidate_name,
-            passport,
-            certificate_name,
-            certificate_number,
-            start_date,
-            end_date,
-            issue_date,
-            expiry_date
-          FROM legacy_certificates
-          WHERE certificate_number = $1
-          LIMIT 1;
-        `;
-        result = await client.query(query, values);
-        resultCount = result.rows.length;
-        if (resultCount > 0) {
-          source = 'legacy';
-        }
-      } else {
-        source = 'primary';
-      }
-    } else {
-      // Case B: 14 or 16 digits - Search legacy only
-      const query = `
+    if (resultCount === 0) {
+      // Fallback to legacy
+      const legacyQuery = `
         SELECT
           candidate_name,
           passport,
@@ -127,11 +104,13 @@ export default async (req, res) => {
         WHERE certificate_number = $1
         LIMIT 1;
       `;
-      result = await client.query(query, values);
+      result = await client.query(legacyQuery, values);
       resultCount = result.rows.length;
       if (resultCount > 0) {
         source = 'legacy';
       }
+    } else {
+      source = 'primary';
     }
 
     if (resultCount === 0) {
