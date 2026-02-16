@@ -67,30 +67,35 @@ export default async (req, res) => {
     let result;
     let values = [certificate_number];
 
-    // Primary query - try for all certificate numbers
-    const primaryQuery = `
+    // Unified query - try for all certificate numbers using UNION ALL
+    const unifiedQuery = `
       SELECT
-        COALESCE((c.json_data::jsonb)->>'firstName','') || ' ' || COALESCE((c.json_data::jsonb)->>'lastName','') AS candidate_name,
-        COALESCE((c.json_data::jsonb)->>'passport','') AS passport,
-        cs.certificate_name,
-        cs.certificate_number,
-        cs.start_date,
-        cs.end_date,
-        cs.issue_date,
-        cs.expiry_date
-      FROM certificate_selections cs
-      JOIN candidates c ON cs.candidate_id = c.id
-      WHERE cs.certificate_number = $1
-        AND c.json_data IS NOT NULL
-        AND jsonb_typeof(c.json_data::jsonb) = 'object'
-      LIMIT 1;
-    `;
-    result = await client.query(primaryQuery, values);
-    resultCount = result.rows.length;
-
-    if (resultCount === 0) {
-      // Fallback to legacy
-      const legacyQuery = `
+        candidate_name,
+        passport,
+        certificate_name,
+        certificate_number,
+        start_date,
+        end_date,
+        issue_date,
+        expiry_date,
+        'primary' AS source
+      FROM (
+        SELECT
+          COALESCE((c.json_data::jsonb)->>'firstName','') || ' ' || COALESCE((c.json_data::jsonb)->>'lastName','') AS candidate_name,
+          COALESCE((c.json_data::jsonb)->>'passport','') AS passport,
+          cr.course_name AS certificate_name,
+          cs.certificate_number,
+          cs.start_date,
+          cs.end_date,
+          cs.issue_date,
+          cs.expiry_date
+        FROM certificate_selections cs
+        JOIN candidates c ON cs.candidate_id = c.id
+        JOIN courses cr ON cs.course_id = cr.id
+        WHERE cs.certificate_number = $1
+          AND c.json_data IS NOT NULL
+          AND jsonb_typeof(c.json_data::jsonb) = 'object'
+        UNION ALL
         SELECT
           candidate_name,
           passport,
@@ -102,16 +107,12 @@ export default async (req, res) => {
           expiry_date
         FROM legacy_certificates
         WHERE certificate_number = $1
-        LIMIT 1;
-      `;
-      result = await client.query(legacyQuery, values);
-      resultCount = result.rows.length;
-      if (resultCount > 0) {
-        source = 'legacy';
-      }
-    } else {
-      source = 'primary';
-    }
+      ) AS combined
+      LIMIT 1;
+    `;
+    result = await client.query(unifiedQuery, values);
+    resultCount = result.rows.length;
+    source = resultCount > 0 ? result.rows[0].source : 'primary';
 
     if (resultCount === 0) {
       return res.status(404).json({ status: 'INVALID' });
