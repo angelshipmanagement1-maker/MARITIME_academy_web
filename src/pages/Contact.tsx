@@ -1,5 +1,6 @@
 import { Phone, Mail, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ContactForm from "@/components/ContactForm";
 
 const Contact = () => {
 
@@ -9,6 +10,13 @@ const Contact = () => {
         <h1 className="text-4xl md:text-5xl font-bold text-primary mb-12 text-center">
           CONTACT US
         </h1>
+
+        {/* Contact Form Section - Now at the top */}
+        <div className="mb-12">
+          <div className="max-w-2xl mx-auto">
+            <ContactForm />
+          </div>
+        </div>
 
         <div className="max-w-4xl mx-auto">
           {/* Contact Information */}
